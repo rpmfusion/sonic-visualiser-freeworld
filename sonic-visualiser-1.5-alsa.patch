@@ -1,0 +1,11 @@
+--- sonic-visualiser-1.5/sv/sv.pro.alsa	2009-03-16 13:03:50.000000000 -0400
++++ sonic-visualiser-1.5/sv/sv.pro	2009-03-26 15:56:29.122333007 -0400
+@@ -20,7 +20,7 @@
+ 
+ contains(DEFINES, BUILD_STATIC):LIBS -= -ljack
+ 
+-LIBS = -lsvframework -lsvaudioio -lsvview -lsvlayer -lsvrdf -lsvtransform -lsvrdf -lsvtransform -lsvwidgets -lsvdata -lsvplugin -lsvbase -lsvsystem $$LIBS
++LIBS = -lsvframework -lsvaudioio -lsvview -lsvlayer -lsvrdf -lsvtransform -lsvrdf -lsvtransform -lsvwidgets -lsvdata -lsvplugin -lsvbase -lsvsystem -lasound $$LIBS
+ 
+ PRE_TARGETDEPS += ../view/libsvview.a \
+                   ../layer/libsvlayer.a \
