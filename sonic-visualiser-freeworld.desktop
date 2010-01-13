@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Sonic Visualiser (Freeworld)
+GenericName=Audio visualization tool
+Comment=Audio visualization tool
+Categories=AudioVideo;Viewer;Player;X-DigitalProcessing;
+Encoding=UTF-8
+Exec=sonic-visualiser-freeworld %U
+Icon=sonic-visualiser-freeworld
+MimeType=application/x-flac;audio/x-flac;audio/wav;audio/x-wav;audio/x-pn-wav;audio/x-mp3;application/x-ogg;application/ogg;audio/ogg;
+StartupNotify=true
+Terminal=false
+Type=Application
