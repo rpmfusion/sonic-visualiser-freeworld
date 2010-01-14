@@ -1,6 +1,6 @@
 Name:           sonic-visualiser-freeworld
-Version:        1.6
-Release:        4%{?dist}
+Version:        1.7.1
+Release:        1%{?dist}
 Summary:        A program for viewing and exploring audio data
 
 Group:          Applications/Multimedia
@@ -91,6 +91,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Wed Jan 13 2010 Michel Salim <salimma@fedoraproject.org> - 1.7.1-1
+- Update to 1.7.1
+
 * Wed Sep 23 2009 Orcan Ogetbil <oget[DOT]fedora[AT]gmail[DOT]com> - 1.6-4
 - Update desktop file according to F-12 FedoraStudio feature
 
