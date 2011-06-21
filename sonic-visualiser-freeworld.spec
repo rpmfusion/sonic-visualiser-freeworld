@@ -1,15 +1,15 @@
 Name:           sonic-visualiser-freeworld
-Version:        1.7.2
+Version:        1.8
 Release:        1%{?dist}
 Summary:        A program for viewing and exploring audio data
 
 Group:          Applications/Multimedia
 License:        GPLv2+
 URL:            http://www.sonicvisualiser.org/
-Source0:        http://downloads.sourceforge.net/sv1/sonic-visualiser-%{version}.tar.bz2
+Source0:        http://downloads.sourceforge.net/sv1/sonic-visualiser-%{version}.tar.gz
 Source1:        sonic-visualiser-freeworld.desktop
-Patch0:         sonic-visualiser-1.5-gcc44.patch
-Patch1:         sonic-visualiser-1.5-alsa.patch
+Patch0:         sonic-visualiser-1.8-gcc46.patch
+Patch1:         sonic-visualiser-1.8-implicit-dso.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  qt4-devel vamp-plugin-sdk-devel
@@ -17,13 +17,13 @@ BuildRequires:  libsndfile-devel libsamplerate-devel fftw-devel bzip2-devel
 BuildRequires:  alsa-lib-devel jack-audio-connection-kit-devel
 BuildRequires:  pulseaudio-libs-devel
 BuildRequires:  redland-devel rubberband-devel
-BuildRequires:  libmad-devel
+BuildRequires:	libmad-devel
 BuildRequires:  liboggz-devel libfishsound-devel liblo-devel
 BuildRequires:  desktop-file-utils
 Requires:       hicolor-icon-theme
 
 %description
-Sonic Visualiser is an application for viewing and analysing the
+Sonic Visualiser is an application for viewing and analyzing the
 contents of music audio files.
 
 The aim of Sonic Visualiser is to be the first program you reach for
@@ -38,16 +38,16 @@ analysis plugin format – as well as applying standard audio effects.
 
 
 %prep
-%setup -q -n sonic-visualiser-%{version}
-# https://sourceforge.net/tracker/?func=detail&aid=2715387&group_id=162924&atid=825705
-%patch0 -p1 -b .gcc44
-# https://sourceforge.net/tracker/?func=detail&aid=2715381&group_id=162924&atid=825705
-%patch1 -p1 -b .alsa
+%setup -q
+%patch0 -p1 -b .gcc46
+%patch1 -p1 -b .implicit-dso
 
 
 %build
-qmake-qt4
-make %{?_smp_mflags}
+%configure
+#qmake-qt4
+#make {?_smp_mflags}
+make
 
 
 %install
@@ -55,14 +55,15 @@ rm -rf $RPM_BUILD_ROOT
 # install does nothing right now
 # make install DESTDIR=$RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{_bindir}
-install -m 755 -p sv/sonic-visualiser \
+install -m 755 -p sonic-visualiser/sonic-visualiser \
         $RPM_BUILD_ROOT%{_bindir}/%{name}
 # desktop file and icon
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/48x48/apps
-install -m 644 -p sv/icons/sv-48x48.png \
-        $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/48x48/apps/%{name}.png
-desktop-file-install --dir=$RPM_BUILD_ROOT%{_datadir}/applications \
-                     %{SOURCE1}
+for s in 16 22 24 32 48 64 128; do
+    mkdir -p $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/${s}x${s}/apps
+    install -m 644 -p sonic-visualiser/icons/sv-${s}x${s}.png \
+        $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/${s}x${s}/apps/%{name}.png
+done
+desktop-file-install --dir=$RPM_BUILD_ROOT%{_datadir}/applications %{SOURCE1}
 
 
 %clean
@@ -71,12 +72,14 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
+update-desktop-database &> /dev/null || :
 
 %postun
 if [ $1 -eq 0 ] ; then
     touch --no-create %{_datadir}/icons/hicolor &>/dev/null
     gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 fi
+update-desktop-database &> /dev/null || :
 
 %posttrans
 gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
@@ -84,18 +87,44 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %files
 %defattr(-,root,root,-)
-%doc COPYING README README.OSC
+%doc sonic-visualiser/CHANGELOG sonic-visualiser/COPYING sonic-visualiser/README sonic-visualiser/README.OSC
 %{_bindir}/sonic-visualiser-freeworld
 %{_datadir}/applications/*.desktop
 %{_datadir}/icons/hicolor/*/apps/*.png
 
 
 %changelog
-* Sun Jun 13 2010 Michel Salim <salimma@fedoraproject.org> - 1.7.2-1
-- Update to 1.7.2
+* Tue Jun 21 2011 Michel Salim <salimma@fedoraproject.org> - 1.8-1
+- Update to 1.8
+
+* Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
+* Tue Jul 20 2010 Orcan Ogetbil <oget[DOT]fedora[AT]gmail[DOT]com> - 1.7.2-2
+- Rebuild against new liblo-0.26
+
+* Wed Jun 02 2010 Rakesh Pandit <rakesh@fedoraproject.org> - 1.7.2-1
+- Updated to 1.7.2
+- Release Notes:
+- (reference: https://sourceforge.net/projects/sv1/files/sonic-visualiser/1.7.2/CHANGELOG/download)
+-   The time-value layer now has an origin line and an option to
+ show derivatives (change from one point to the next) rather than
+ raw values
+-   A crash when pressing Play straight after New Session has been
+ fixed
+-   Builds with latest liboggz
+
+* Wed Jun 02 2010 Rakesh Pandit <rakesh@fedoraproject.org> - 1.7.1-2
+- Bump for new liboggz lib
 
 * Wed Jan 13 2010 Michel Salim <salimma@fedoraproject.org> - 1.7.1-1
 - Update to 1.7.1
+
+* Sun Jan 03 2010 Rex Dieter <rdieter@fedoraproject.org> - 1.6-6
+- rebuild (redland)
+
+* Sun Jan 03 2010 Rex Dieter <rdieter@fedoraproject.org> - 1.6-5
+- rebuild (rasqal/redland)
 
 * Wed Sep 23 2009 Orcan Ogetbil <oget[DOT]fedora[AT]gmail[DOT]com> - 1.6-4
 - Update desktop file according to F-12 FedoraStudio feature
