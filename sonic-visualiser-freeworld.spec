@@ -38,7 +38,7 @@ analysis plugin format – as well as applying standard audio effects.
 
 
 %prep
-%setup -q
+%setup -q -n sonic-visualiser-%{version}
 %patch0 -p1 -b .gcc46
 %patch1 -p1 -b .implicit-dso
 
