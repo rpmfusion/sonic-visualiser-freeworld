@@ -1,0 +1,11 @@
+--- sonic-visualiser-1.8/svapp/audioio/AudioCallbackPlaySource.h.no_virt_QObject	2011-04-08 17:56:48.000000000 +0200
++++ sonic-visualiser-1.8/svapp/audioio/AudioCallbackPlaySource.h	2011-08-09 23:27:18.856064127 +0200
+@@ -51,7 +51,7 @@
+  * provides a method for a realtime thread to pick up the latest
+  * available sample data from these buffers.
+  */
+-class AudioCallbackPlaySource : public virtual QObject,
++class AudioCallbackPlaySource : public QObject,
+ 				public AudioPlaySource
+ {
+     Q_OBJECT

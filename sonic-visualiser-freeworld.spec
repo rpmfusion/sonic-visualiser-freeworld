@@ -1,6 +1,6 @@
 Name:           sonic-visualiser-freeworld
 Version:        1.8
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A program for viewing and exploring audio data
 
 Group:          Applications/Multimedia
@@ -10,14 +10,28 @@ Source0:        http://downloads.sourceforge.net/sv1/sonic-visualiser-%{version}
 Source1:        sonic-visualiser-freeworld.desktop
 Patch0:         sonic-visualiser-1.8-gcc46.patch
 Patch1:         sonic-visualiser-1.8-implicit-dso.patch
+Patch2:         sonic-visualiser-1.8-no_virt_QObject.patch
+
+%if 0%{?el5}
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+%endif
+
+## upstreamable patches
+# support raptor2
+# note too, this package currently doesn't explicitly BR raptor-devel or raptor2-devel
+# but relies on implicit deps from redland-devel
+Patch50:        sonic-visualiser-1.8-raptor2.patch
+%if 0%{?fedora} > 15
+%global raptor2 1
+BuildRequires:  automake autoconf
+%endif
 
 BuildRequires:  qt4-devel vamp-plugin-sdk-devel
 BuildRequires:  libsndfile-devel libsamplerate-devel fftw-devel bzip2-devel
 BuildRequires:  alsa-lib-devel jack-audio-connection-kit-devel
 BuildRequires:  pulseaudio-libs-devel
 BuildRequires:  redland-devel rubberband-devel
-BuildRequires:	libmad-devel
+BuildRequires:  libmad-devel
 BuildRequires:  liboggz-devel libfishsound-devel liblo-devel
 BuildRequires:  desktop-file-utils
 Requires:       hicolor-icon-theme
@@ -41,11 +55,23 @@ analysis plugin format – as well as applying standard audio effects.
 %setup -q -n sonic-visualiser-%{version}
 %patch0 -p1 -b .gcc46
 %patch1 -p1 -b .implicit-dso
+%patch2 -p1 -b .no_virt_QObject
+
+%if 0%{?raptor2}
+%patch50 -p1 -b .raptor2
+for dir in sonic-visualiser svapp svcore svgui ; do
+pushd $dir
+sh ./bootstrap.sh
+popd
+done
+%endif
 
 
 %build
 %configure
 #qmake-qt4
+
+# not SMP-safe
 #make {?_smp_mflags}
 make
 
@@ -66,8 +92,10 @@ done
 desktop-file-install --dir=$RPM_BUILD_ROOT%{_datadir}/applications %{SOURCE1}
 
 
+%if 0%{?rhel}
 %clean
 rm -rf $RPM_BUILD_ROOT
+%endif
 
 
 %post
@@ -94,6 +122,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Mon Oct  3 2011 Michel Salim <salimma@fedoraproject.org> - 1.8-3
+- Fix for Qt 4.8 disallowing virtual inheritance of QObject (Radek Novacek)
+- patch for raptor2 support (Rex Dieter)
+
 * Mon Oct 03 2011 Nicolas Chauvet <kwizart@gmail.com> - 1.8-2
 - Rebuild for librasqal
 
