@@ -1,6 +1,6 @@
 Name:           sonic-visualiser-freeworld
 Version:        1.8
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A program for viewing and exploring audio data
 
 Group:          Applications/Multimedia
@@ -94,6 +94,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Mon Oct 03 2011 Nicolas Chauvet <kwizart@gmail.com> - 1.8-2
+- Rebuild for librasqal
+
 * Tue Jun 21 2011 Michel Salim <salimma@fedoraproject.org> - 1.8-1
 - Update to 1.8
 
