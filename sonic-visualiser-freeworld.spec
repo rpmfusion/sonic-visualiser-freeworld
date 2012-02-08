@@ -1,6 +1,6 @@
 Name:           sonic-visualiser-freeworld
 Version:        1.8
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A program for viewing and exploring audio data
 
 Group:          Applications/Multimedia
@@ -122,6 +122,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Wed Feb 08 2012 Nicolas Chauvet <kwizart@gmail.com> - 1.8-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Mon Oct  3 2011 Michel Salim <salimma@fedoraproject.org> - 1.8-3
 - Fix for Qt 4.8 disallowing virtual inheritance of QObject (Radek Novacek)
 - patch for raptor2 support (Rex Dieter)
