@@ -1,6 +1,6 @@
 Name:           sonic-visualiser-freeworld
-Version:        1.8
-Release:        5%{?dist}
+Version:        1.9
+Release:        1%{?dist}
 Summary:        A program for viewing and exploring audio data
 
 Group:          Applications/Multimedia
@@ -8,22 +8,11 @@ License:        GPLv2+
 URL:            http://www.sonicvisualiser.org/
 Source0:        http://downloads.sourceforge.net/sv1/sonic-visualiser-%{version}.tar.gz
 Source1:        sonic-visualiser-freeworld.desktop
-Patch0:         sonic-visualiser-1.8-gcc46.patch
-Patch1:         sonic-visualiser-1.8-implicit-dso.patch
-Patch2:         sonic-visualiser-1.8-no_virt_QObject.patch
+Patch0:         sonic-visualiser-1.8-implicit-dso.patch
+Patch1:         sonic-visualiser-1.9-gcc47.patch
 
 %if 0%{?el5}
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-%endif
-
-## upstreamable patches
-# support raptor2
-# note too, this package currently doesn't explicitly BR raptor-devel or raptor2-devel
-# but relies on implicit deps from redland-devel
-Patch50:        sonic-visualiser-1.8-raptor2.patch
-%if 0%{?fedora} > 15
-%global raptor2 1
-BuildRequires:  automake autoconf
 %endif
 
 BuildRequires:  qt4-devel vamp-plugin-sdk-devel
@@ -53,18 +42,8 @@ analysis plugin format – as well as applying standard audio effects.
 
 %prep
 %setup -q -n sonic-visualiser-%{version}
-%patch0 -p1 -b .gcc46
-%patch1 -p1 -b .implicit-dso
-%patch2 -p1 -b .no_virt_QObject
-
-%if 0%{?raptor2}
-%patch50 -p1 -b .raptor2
-for dir in sonic-visualiser svapp svcore svgui ; do
-pushd $dir
-sh ./bootstrap.sh
-popd
-done
-%endif
+%patch0 -p1 -b .implicit-dso
+%patch1 -p1 -b .gcc47
 
 
 %build
@@ -122,6 +101,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Fri Mar 23 2012 Michel Salim <salimma@fedoraproject.org> - 1.9-1
+- Update to 1.9
+
 * Fri Mar 02 2012 Nicolas Chauvet <kwizart@gmail.com> - 1.8-5
 - Rebuilt for c++ ABI breakage
 
