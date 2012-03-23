@@ -1,5 +1,5 @@
 Name:           sonic-visualiser-freeworld
-Version:        1.8
+Version:        1.9
 Release:        1%{?dist}
 Summary:        A program for viewing and exploring audio data
 
@@ -8,16 +8,19 @@ License:        GPLv2+
 URL:            http://www.sonicvisualiser.org/
 Source0:        http://downloads.sourceforge.net/sv1/sonic-visualiser-%{version}.tar.gz
 Source1:        sonic-visualiser-freeworld.desktop
-Patch0:         sonic-visualiser-1.8-gcc46.patch
-Patch1:         sonic-visualiser-1.8-implicit-dso.patch
+Patch0:         sonic-visualiser-1.8-implicit-dso.patch
+Patch1:         sonic-visualiser-1.9-gcc47.patch
+
+%if 0%{?el5}
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+%endif
 
 BuildRequires:  qt4-devel vamp-plugin-sdk-devel
 BuildRequires:  libsndfile-devel libsamplerate-devel fftw-devel bzip2-devel
 BuildRequires:  alsa-lib-devel jack-audio-connection-kit-devel
 BuildRequires:  pulseaudio-libs-devel
 BuildRequires:  redland-devel rubberband-devel
-BuildRequires:	libmad-devel
+BuildRequires:  libmad-devel
 BuildRequires:  liboggz-devel libfishsound-devel liblo-devel
 BuildRequires:  desktop-file-utils
 Requires:       hicolor-icon-theme
@@ -39,13 +42,15 @@ analysis plugin format – as well as applying standard audio effects.
 
 %prep
 %setup -q -n sonic-visualiser-%{version}
-%patch0 -p1 -b .gcc46
-%patch1 -p1 -b .implicit-dso
+%patch0 -p1 -b .implicit-dso
+%patch1 -p1 -b .gcc47
 
 
 %build
 %configure
 #qmake-qt4
+
+# not SMP-safe
 #make {?_smp_mflags}
 make
 
@@ -66,8 +71,10 @@ done
 desktop-file-install --dir=$RPM_BUILD_ROOT%{_datadir}/applications %{SOURCE1}
 
 
+%if 0%{?rhel}
 %clean
 rm -rf $RPM_BUILD_ROOT
+%endif
 
 
 %post
@@ -94,6 +101,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Fri Mar 23 2012 Michel Salim <salimma@fedoraproject.org> - 1.9-1
+- Update to 1.9
+
 * Tue Jun 21 2011 Michel Salim <salimma@fedoraproject.org> - 1.8-1
 - Update to 1.8
 
