@@ -1,20 +1,21 @@
 Name:           sonic-visualiser-freeworld
-Version:        2.0
+Version:        2.1
 Release:        1%{?dist}
 Summary:        A program for viewing and exploring audio data
 
 Group:          Applications/Multimedia
 License:        GPLv2+
 URL:            http://www.sonicvisualiser.org/
-Source0:        http://code.soundsoftware.ac.uk/attachments/download/539/sonic-visualiser-2.0.tar.gz
+Source0:        https://code.soundsoftware.ac.uk/attachments/download/711/sonic-visualiser-2.1.tar.gz
 Source1:        sonic-visualiser-freeworld.desktop
 
-BuildRequires:  qt4-devel
-BuildRequires:  vamp-plugin-sdk-devel >= 2.4
+BuildRequires:  qt5-qtbase-devel
+BuildRequires:  vamp-plugin-sdk-devel >= 2.5
 BuildRequires:  libsndfile-devel libsamplerate-devel fftw-devel bzip2-devel
 BuildRequires:  alsa-lib-devel jack-audio-connection-kit-devel
 BuildRequires:  pulseaudio-libs-devel
 BuildRequires:  dataquay-devel rubberband-devel
+BuildRequires:  sord-devel
 BuildRequires:  libmad-devel
 BuildRequires:  liboggz-devel libfishsound-devel liblo-devel
 BuildRequires:  desktop-file-utils
@@ -38,7 +39,7 @@ analysis plugin format – as well as applying standard audio effects.
 %prep
 %setup -q -n sonic-visualiser-%{version}
 # Fix incorrect version string
-%{__sed} -i.ver "s|1.9'|2.0'|" sonic-visualiser/configure
+#{__sed} -i.ver "s|1.9'|2.0'|" sonic-visualiser/configure
 
 
 %build
@@ -54,12 +55,12 @@ rm -rf $RPM_BUILD_ROOT
 # install does nothing right now
 # make install DESTDIR=$RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{_bindir}
-install -m 755 -p sonic-visualiser/sonic-visualiser \
+install -m 755 -p sonic-visualiser \
         $RPM_BUILD_ROOT%{_bindir}/%{name}
 # desktop file and icon
 for s in 16 22 24 32 48 64 128; do
     mkdir -p $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/${s}x${s}/apps
-    install -m 644 -p sonic-visualiser/icons/sv-${s}x${s}.png \
+    install -m 644 -p icons/sv-${s}x${s}.png \
         $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/${s}x${s}/apps/%{name}.png
 done
 desktop-file-install --dir=$RPM_BUILD_ROOT%{_datadir}/applications %{SOURCE1}
@@ -88,13 +89,16 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %files
 %defattr(-,root,root,-)
-%doc sonic-visualiser/CHANGELOG sonic-visualiser/COPYING sonic-visualiser/README sonic-visualiser/README.OSC
+%doc CHANGELOG COPYING README README.OSC
 %{_bindir}/sonic-visualiser-freeworld
 %{_datadir}/applications/*.desktop
 %{_datadir}/icons/hicolor/*/apps/*.png
 
 
 %changelog
+* Thu Jun 20 2013 Michel Salim <salimma@fedoraproject.org> - 2.1-1
+- Update to 2.1
+
 * Wed Nov 14 2012 Michel Salim <salimma@fedoraproject.org> - 2.0-1
 - Update to 2.0
 
@@ -190,7 +194,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 * Wed Feb 13 2008 Michel Salim <michel.sylvan@gmail.com> - 1.0-4
 - Exclude ppc for now. On it, qmake uses wrong (x86) optflags (#432733).
 - Add missing BR on libfishsound-devel
- 
+
 * Sun Feb  3 2008 Michel Salim <michel.sylvan@gmail.com> - 1.0-3
 - Add some #includes, needed due to GCC 4.3's header dependency cleanup
 
@@ -199,4 +203,3 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 * Wed Jan 16 2008 Michel Salim <michel.sylvan@gmail.com> - 1.0-1
 - Initial Fedora package
-
