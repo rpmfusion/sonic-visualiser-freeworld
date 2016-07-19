@@ -1,12 +1,12 @@
 Name:           sonic-visualiser-freeworld
-Version:        2.1
-Release:        2%{?dist}
+Version:        2.4.1
+Release:        1%{?dist}
 Summary:        A program for viewing and exploring audio data
 
 Group:          Applications/Multimedia
 License:        GPLv2+
 URL:            http://www.sonicvisualiser.org/
-Source0:        https://code.soundsoftware.ac.uk/attachments/download/711/sonic-visualiser-2.1.tar.gz
+Source0:        https://code.soundsoftware.ac.uk/attachments/download/1185/sonic-visualiser-2.4.1.tar.gz
 Source1:        sonic-visualiser-freeworld.desktop
 
 BuildRequires:  qt5-qtbase-devel
@@ -39,7 +39,7 @@ analysis plugin format – as well as applying standard audio effects.
 %prep
 %setup -q -n sonic-visualiser-%{version}
 # Fix incorrect version string
-#{__sed} -i.ver "s|1.9'|2.0'|" sonic-visualiser/configure
+%{__sed} -i.ver "s|2.4'|2.4.1'|" configure
 
 
 %build
@@ -96,6 +96,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Tue Jul 19 2016 Leigh Scott <leigh123linux@googlemail.com> - 2.4.1-1
+- Update to 2.4.1
+
 * Sun Aug 31 2014 Sérgio Basto <sergio@serjux.com> - 2.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
