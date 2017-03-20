@@ -1,6 +1,6 @@
 Name:           sonic-visualiser-freeworld
 Version:        2.4.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A program for viewing and exploring audio data
 
 Group:          Applications/Multimedia
@@ -96,6 +96,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Mon Mar 20 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 2.4.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+
 * Tue Jul 19 2016 Leigh Scott <leigh123linux@googlemail.com> - 2.4.1-1
 - Update to 2.4.1
 
